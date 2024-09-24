@@ -1,5 +1,5 @@
 from google.cloud import storage
-from utils import get_logger
+from app.utils import get_logger
 from typing import Any
 
 logger = get_logger()

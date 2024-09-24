@@ -101,21 +101,21 @@ Store sensitive information like `CLIENT_ID`, `CLIENT_SECRET`, and OAuth tokens 
 2. **Build the Docker Image:**
 
    ```bash
-   docker build -t xero-data-ingestion:latest .
+   docker build -t gcr.io/semantc-dev/xero-ingestion:latest .
    ```
 
 3. **Tag the Docker Image for Artifact Registry:**
 
-   ```bash
-   docker tag xero-data-ingestion:latest REGION-docker.pkg.dev/PROJECT_ID/xero-data-ingestion-repo/xero-data-ingestion:latest
+   <!-- ```bash
+   docker tag gcr.io/semantc-dev/xero-ingestion:latest REGION-docker.pkg.dev/PROJECT_ID/xero-data-ingestion-repo/gcr.io/semantc-dev/xero-ingestion:latest
    ```
 
-   Replace `REGION` and `PROJECT_ID` with your GCP region and project ID.
+   Replace `REGION` and `PROJECT_ID` with your GCP region and project ID. -->
 
 4. **Push the Docker Image to Artifact Registry:**
 
    ```bash
-   docker push REGION-docker.pkg.dev/PROJECT_ID/xero-data-ingestion-repo/xero-data-ingestion:latest
+   docker push gcr.io/semantc-dev/xero-ingestion:latest
    ```
 
 ### Deploying the Application

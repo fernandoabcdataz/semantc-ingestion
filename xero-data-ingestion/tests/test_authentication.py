@@ -1,6 +1,7 @@
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from app.authentication import get_token, refresh_token, store_tokens, retrieve_tokens
+from requests_oauthlib import OAuth2Session
 
 @pytest.fixture
 def mock_get_secret():

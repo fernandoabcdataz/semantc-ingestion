@@ -1,7 +1,7 @@
 from google.cloud import bigquery
 from google.cloud import storage
-from config import CONFIG
-from utils import get_logger
+from app.config import CONFIG
+from app.utils import get_logger
 import json
 import io
 import datetime
@@ -38,7 +38,8 @@ def load_json_to_table() -> None:
         # Define table schema
         schema = [
             bigquery.SchemaField("ingestion_time", "TIMESTAMP", mode="REQUIRED"),
-            bigquery.SchemaField("data", "STRING", mode="REQUIRED"),
+            bigquery.SchemaField("InvoiceID", "STRING", mode="NULLABLE"),  # Example field; adjust based on endpoint
+            # Add more schema fields as needed based on the endpoint data structure
         ]
 
         table_ref = bigquery_client.dataset(dataset_id).table(f"xero_{endpoint}")

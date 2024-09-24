@@ -1,6 +1,6 @@
 import requests
-from authentication import get_token
-from utils import get_logger
+from app.authentication import get_token
+from app.utils import get_logger
 from requests.exceptions import RequestException
 from ratelimit import limits, sleep_and_retry
 from requests.adapters import HTTPAdapter

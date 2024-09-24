@@ -1,16 +1,17 @@
 import pytest
 from unittest.mock import patch
 from app.api_client import fetch_data_from_endpoint
+import requests
 
 @pytest.fixture
 def mock_get_token():
-    with patch('app.authentication.get_token') as mock:
+    with patch('app.api_client.get_token') as mock:
         mock.return_value = {"access_token": "test_access_token"}
         yield mock
 
 @pytest.fixture
 def mock_requests_get():
-    with patch('app.api_client.requests.Session.get') as mock:
+    with patch('app.api_client.session.get') as mock:
         yield mock
 
 def test_fetch_data_from_endpoint_success(mock_requests_get, mock_get_token):

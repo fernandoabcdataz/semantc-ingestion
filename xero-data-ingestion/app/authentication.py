@@ -3,9 +3,9 @@ import time
 from google.cloud import secretmanager
 from requests_oauthlib import OAuth2Session
 from cachetools import TTLCache, cached
-from config import CONFIG
+from app.config import CONFIG
 from threading import Lock
-from utils import get_logger
+from app.utils import get_logger
 from typing import Tuple, Dict, Any
 
 logger = get_logger()

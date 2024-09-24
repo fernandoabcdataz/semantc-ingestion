@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from app.table_loader import load_json_to_table
+from google.cloud import bigquery
 
 @pytest.fixture
 def mock_bigquery_client():
@@ -40,7 +41,7 @@ def test_load_json_to_table_success(mock_bigquery_client, mock_storage_client):
 def test_load_json_to_table_dataset_not_found(mock_bigquery_client, mock_storage_client):
     # Arrange
     mock_bq_instance = mock_bigquery_client.return_value
-    mock_bq_instance.get_dataset.side_effect = bigquery.NotFound
+    mock_bq_instance.get_dataset.side_effect = bigquery.NotFound("Dataset not found")
     mock_bq_instance.create_dataset.return_value = MagicMock()
 
     mock_table = MagicMock()
