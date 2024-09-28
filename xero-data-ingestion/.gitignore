@@ -113,7 +113,7 @@ cython_debug/
 # Docker
 *.log
 docker-compose.yml
-Dockerfile
+# Dockerfile
 *.env
 
 # Secrets
