@@ -1,37 +1,25 @@
 import os
-from typing import Dict
+from typing import Dict, Any
 
 def get_env_variable(var_name: str) -> str:
-    """
-    Retrieves an environment variable or raises an error if not set.
-
-    Args:
-        var_name (str): The name of the environment variable.
-
-    Returns:
-        str: The value of the environment variable.
-    """
     value = os.environ.get(var_name)
     if value is None:
         raise ValueError(f"Environment variable {var_name} is not set")
     return value
 
-def get_client_config() -> Dict[str, str]:
-    """
-    Retrieves client-specific configuration from environment variables.
-
-    Returns:
-        Dict[str, str]: A dictionary containing client configurations.
-    """
+def get_client_config() -> Dict[str, Any]:
     client_name = get_env_variable("CLIENT_NAME")
     project_id = get_env_variable("GOOGLE_CLOUD_PROJECT")
-
+    client_token = get_env_variable("CLIENT_TOKEN")
+    bucket_name = get_env_variable("BUCKET_NAME")
+    
     return {
         "CLIENT_NAME": client_name,
         "PROJECT_ID": project_id,
-        "BUCKET_NAME": f"{project_id}-{client_name}-xero-data",
+        "CLIENT_TOKEN": client_token,
+        "BUCKET_NAME": bucket_name,
         "SECRETS_PATH": f"projects/{project_id}/secrets",
-        "BATCH_SIZE": int(os.environ.get("BATCH_SIZE", 100))  # Default batch size
+        "BATCH_SIZE": int(os.environ.get("BATCH_SIZE", 100))
     }
 
 TOKEN_URL = 'https://identity.xero.com/connect/token'

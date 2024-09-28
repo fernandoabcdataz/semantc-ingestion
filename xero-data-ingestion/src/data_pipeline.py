@@ -1,8 +1,8 @@
 import asyncio
-from app.config import CONFIG
-from app.api_client import fetch_data_from_endpoint
-from app.data_storage import write_json_to_gcs
-from app.utils import get_logger
+from config import CONFIG
+from api_client import fetch_data_from_endpoint
+from data_storage import write_json_to_gcs
+from utils import get_logger
 import json
 from datetime import datetime
 from typing import Tuple

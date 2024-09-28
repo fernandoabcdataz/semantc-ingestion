@@ -1,7 +1,7 @@
 from google.cloud import bigquery
 from google.cloud import storage
-from app.config import CONFIG
-from app.utils import get_logger
+from config import CONFIG
+from utils import get_logger
 import json
 import io
 import datetime

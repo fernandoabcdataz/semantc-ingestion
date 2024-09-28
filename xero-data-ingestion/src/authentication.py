@@ -3,9 +3,9 @@ import time
 from google.cloud import secretmanager
 from requests_oauthlib import OAuth2Session
 from cachetools import TTLCache, cached
-from app.config import CONFIG
+from config import CONFIG
 from threading import Lock
-from app.utils import get_logger
+from utils import get_logger
 from typing import Tuple, Dict, Any
 
 logger = get_logger()
@@ -16,13 +16,13 @@ _token_lock = Lock()
 
 def get_secret(secret_id: str) -> str:
     """
-    Retrieves a secret from Google Secret Manager.
+    retrieves a secret from Google Secret Manager
 
     Args:
-        secret_id (str): The ID of the secret.
+        secret_id (str): the ID of the secret
 
     Returns:
-        str: The secret value.
+        str: the secret value
     """
     try:
         client = secretmanager.SecretManagerServiceClient()
