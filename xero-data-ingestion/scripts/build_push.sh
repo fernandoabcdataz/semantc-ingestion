@@ -8,11 +8,12 @@ PROJECT_ID="semantc-dev"
 REGION="us-central1"
 REPO="gcr.io"
 IMAGE_TAG="latest"
-IMAGE_NAME="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}/xero-ingestion:${IMAGE_TAG}"
+IMAGE_NAME="${REPO}/${PROJECT_ID}/xero-ingestion:${IMAGE_TAG}"
+
+echo "${IMAGE_NAME}"
 
 # authenticate with GCP
-# gcloud auth login
-gcloud config set project ${PROJECT_ID}
+gcloud auth configure-docker gcr.io
 
 # create Artifact Registry repository if it doesn't exist
 if ! gcloud artifacts repositories list --filter="name:${REPO}" --format="value(name)" | grep -q ${REPO}; then

@@ -17,7 +17,7 @@ PROJECT_ID="semantc-dev"
 REGION="us-central1"
 JOB_NAME="data-ingestion-job"
 
-BUCKET_NAME="client--${CLIENT_NAME}--bucket"
+BUCKET_NAME="client-${CLIENT_NAME}-bucket"
 
 # execute the Cloud Run Job with environment variables
 gcloud run jobs execute ${JOB_NAME} \
