@@ -8,21 +8,18 @@ def get_env_variable(var_name: str) -> str:
     return value
 
 def get_client_config() -> Dict[str, Any]:
-    client_name = get_env_variable("CLIENT_NAME")
-    project_id = get_env_variable("GOOGLE_CLOUD_PROJECT")
-    client_token = get_env_variable("CLIENT_TOKEN")
+    client_id = get_env_variable("CLIENT_ID")
+    project_id = get_env_variable("PROJECT_ID")
     bucket_name = get_env_variable("BUCKET_NAME")
     
     return {
-        "CLIENT_NAME": client_name,
+        "CLIENT_ID": client_id,
         "PROJECT_ID": project_id,
-        "CLIENT_TOKEN": client_token,
         "BUCKET_NAME": bucket_name,
         "SECRETS_PATH": f"projects/{project_id}/secrets",
         "BATCH_SIZE": int(os.environ.get("BATCH_SIZE", 100))
     }
 
-TOKEN_URL = 'https://identity.xero.com/connect/token'
 ENDPOINT_BASE = 'https://api.xero.com/api.xro/2.0/'
 
 ENDPOINTS = {
@@ -62,6 +59,5 @@ ENDPOINTS = {
 
 CONFIG = {
     **get_client_config(),
-    "TOKEN_URL": TOKEN_URL,
     "ENDPOINTS": ENDPOINTS,
 }
