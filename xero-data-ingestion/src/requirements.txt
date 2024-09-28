@@ -8,3 +8,4 @@ oauthlib
 ratelimit
 cachetools
 structlog
+gunicorn

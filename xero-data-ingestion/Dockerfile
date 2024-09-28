@@ -21,6 +21,9 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
+# Explicitly install Gunicorn
+RUN pip install --no-cache-dir gunicorn
+
 # Copy application code
 COPY src/ ./src/
 
