@@ -12,23 +12,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY src/requirements.txt ./requirements.txt
 COPY src/ ./src/
 
-# Install Python dependencies (including gunicorn)
-RUN pip install --no-cache-dir --no-user -r requirements.txt
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Create a non-root user
 RUN adduser --disabled-password appuser
 USER appuser
 
-# Expose port
-EXPOSE 8080
-
 # Set environment variables
-ENV PORT=8080
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH="/app/src"
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:$PORT/ || exit 1
+# Change to the src directory
+WORKDIR /app/src
 
-# Run the application using Gunicorn
-CMD ["gunicorn", "-b", "0.0.0.0:8080", "src.main:app"]
+# Run the application
+CMD ["python", "-u", "main.py"]

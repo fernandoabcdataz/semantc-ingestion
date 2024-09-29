@@ -5,8 +5,8 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from typing import List, Dict, Any
 
-from .authentication import get_token
-from .utils import get_logger
+from authentication import get_token
+from utils import get_logger
 
 logger = get_logger()
 

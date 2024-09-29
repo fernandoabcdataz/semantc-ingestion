@@ -1,7 +1,7 @@
 from google.cloud import storage
 from typing import Any
 
-from .utils import get_logger
+from utils import get_logger
 
 logger = get_logger()
 

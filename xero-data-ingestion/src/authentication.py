@@ -6,8 +6,8 @@ from cachetools import TTLCache, cached
 from threading import Lock
 from typing import Tuple, Dict, Any
 
-from .config import CONFIG
-from .utils import get_logger
+from config import CONFIG
+from utils import get_logger
 
 logger = get_logger()
 
@@ -27,7 +27,7 @@ def get_secret(secret_id: str) -> str:
     """
     try:
         client = secretmanager.SecretManagerServiceClient()
-        name = f"{CONFIG['SECRETS_PATH']}/{secret_id}/versions/latest"
+        name = f"{secret_id}/versions/latest"
         response = client.access_secret_version(name=name)
         return response.payload.data.decode('UTF-8')
     except Exception as e:
@@ -58,7 +58,7 @@ def retrieve_tokens(client_id: str) -> Dict[str, Any]:
         Dict[str, Any]: The token dictionary
     """
     try:
-        secret_name = f"{CONFIG['SECRETS_PATH']}/client-{client_id}-token-xero"
+        secret_name = f"secrets/client-{client_id}-token-xero"
         tokens_json = get_secret(secret_name)
         return json.loads(tokens_json)
     except Exception as e:

@@ -5,8 +5,8 @@ import io
 import datetime
 from typing import List, Dict, Any
 
-from .config import CONFIG
-from .utils import get_logger
+from config import CONFIG
+from utils import get_logger
 
 logger = get_logger()
 
