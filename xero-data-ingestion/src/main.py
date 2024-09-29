@@ -1,10 +1,11 @@
 import os
 from flask import Flask, jsonify, request, abort
-from utils import get_logger
-from data_pipeline import run_pipeline
-from table_loader import load_json_to_table
 from functools import wraps
 import asyncio
+
+from .data_pipeline import run_pipeline
+from .table_loader import load_json_to_table
+from .utils import get_logger
 
 app = Flask(__name__)
 logger = get_logger()

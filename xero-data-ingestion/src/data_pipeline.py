@@ -1,11 +1,12 @@
 import asyncio
-from config import CONFIG
-from api_client import fetch_data_from_endpoint
-from data_storage import write_json_to_gcs
-from utils import get_logger
 import json
 from datetime import datetime
 from typing import Tuple
+
+from .config import CONFIG
+from .api_client import fetch_data_from_endpoint
+from .data_storage import write_json_to_gcs
+from .utils import get_logger
 
 logger = get_logger()
 

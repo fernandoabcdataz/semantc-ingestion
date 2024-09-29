@@ -10,12 +10,11 @@ def get_env_variable(var_name: str) -> str:
 def get_client_config() -> Dict[str, Any]:
     client_id = get_env_variable("CLIENT_ID")
     project_id = get_env_variable("PROJECT_ID")
-    bucket_name = get_env_variable("BUCKET_NAME")
-    
+
     return {
         "CLIENT_ID": client_id,
         "PROJECT_ID": project_id,
-        "BUCKET_NAME": bucket_name,
+        "BUCKET_NAME": f"client-${client_id}-bucket-xero",
         "SECRETS_PATH": f"projects/{project_id}/secrets",
         "BATCH_SIZE": int(os.environ.get("BATCH_SIZE", 100))
     }

@@ -1,11 +1,12 @@
 from google.cloud import bigquery
 from google.cloud import storage
-from config import CONFIG
-from utils import get_logger
 import json
 import io
 import datetime
 from typing import List, Dict, Any
+
+from .config import CONFIG
+from .utils import get_logger
 
 logger = get_logger()
 

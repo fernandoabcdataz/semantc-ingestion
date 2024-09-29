@@ -1,5 +1,5 @@
-# Stage 1: Builder
-FROM python:3.11-slim as builder
+# Use the base Python image
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -8,24 +8,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies globally
-COPY src/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Stage 2: Production
-FROM python:3.11-slim
-
-WORKDIR /app
-
-# Copy installed packages from builder
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
-
-# Explicitly install Gunicorn
-RUN pip install --no-cache-dir gunicorn
-
-# Copy application code
+# Copy requirements and application code
+COPY src/requirements.txt ./requirements.txt
 COPY src/ ./src/
+
+# Install Python dependencies (including gunicorn)
+RUN pip install --no-cache-dir --no-user -r requirements.txt
 
 # Create a non-root user
 RUN adduser --disabled-password appuser
@@ -34,12 +22,13 @@ USER appuser
 # Expose port
 EXPOSE 8080
 
-# Define environment variables
+# Set environment variables
 ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/ || exit 1
+  CMD curl -f http://localhost:$PORT/ || exit 1
 
-# Run the application using Gunicorn for better performance
+# Run the application using Gunicorn
 CMD ["gunicorn", "-b", "0.0.0.0:8080", "src.main:app"]

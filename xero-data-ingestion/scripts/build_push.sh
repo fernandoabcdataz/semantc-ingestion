@@ -3,33 +3,20 @@
 
 set -e
 
-# configuration
+# Configuration
 PROJECT_ID="semantc-dev"
 REGION="us-central1"
 REPO="gcr.io"
 IMAGE_TAG="latest"
 IMAGE_NAME="${REPO}/${PROJECT_ID}/xero-ingestion:${IMAGE_TAG}"
 
-echo "${IMAGE_NAME}"
+echo "Building and pushing image: ${IMAGE_NAME}"
 
-# authenticate with GCP
+# Authenticate with GCP
 gcloud auth configure-docker gcr.io
 
-# create Artifact Registry repository if it doesn't exist
-if ! gcloud artifacts repositories list --filter="name:${REPO}" --format="value(name)" | grep -q ${REPO}; then
-    gcloud artifacts repositories create ${REPO} \
-        --repository-format=docker \
-        --location=${REGION} \
-        --description="Artifact repository for Xero Data Ingestion"
-    echo "Artifact Registry repository '${REPO}' created"
-else
-    echo "Artifact Registry repository '${REPO}' already exists"
-fi
-
-# build Docker image
-docker build -t ${IMAGE_NAME} .
-
-# push Docker image to Artifact Registry
+# Build and push Docker image
+docker build --platform linux/amd64 -t ${IMAGE_NAME} --no-cache .
 docker push ${IMAGE_NAME}
 
-echo "docker image pushed to ${IMAGE_NAME} successfully"
+echo "Docker image pushed to ${IMAGE_NAME} successfully"

@@ -3,10 +3,11 @@ import time
 from google.cloud import secretmanager
 from requests_oauthlib import OAuth2Session
 from cachetools import TTLCache, cached
-from config import CONFIG
 from threading import Lock
-from utils import get_logger
 from typing import Tuple, Dict, Any
+
+from .config import CONFIG
+from .utils import get_logger
 
 logger = get_logger()
 
