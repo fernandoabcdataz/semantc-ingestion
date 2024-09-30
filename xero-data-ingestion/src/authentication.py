@@ -55,12 +55,13 @@ def retrieve_tokens(client_id: str) -> Dict[str, Any]:
         client_id (str): the unique identifier for the client
 
     Returns:
-        Dict[str, Any]: The token dictionary
+        Dict[str, Any]: the token dictionary
     """
     try:
         secret_id = CONFIG['SECRETS_PATH']
         tokens_json = get_secret(secret_id)
-        return json.loads(tokens_json)
+        # print("TOKEN: ", tokens_json)
+        return tokens_json
     except Exception as e:
         logger.error(f"error retrieving tokens for client {client_id}: {str(e)}")
         raise
@@ -98,13 +99,13 @@ def retrieve_tokens(client_id: str) -> Dict[str, Any]:
 @cached(_token_cache)
 def get_token(client_id: str) -> Dict[str, Any]:
     """
-    Retrieves and refreshes the OAuth token for a client if necessary.
+    retrieves and refreshes the OAuth token for a client if necessary
 
     Args:
-        client_id (str): The unique identifier for the client.
+        client_id (str): the unique identifier for the client
 
     Returns:
-        Dict[str, Any]: The valid token dictionary.
+        Dict[str, Any]: the valid token dictionary.
     """
     with _token_lock:
         tokens = retrieve_tokens(client_id)

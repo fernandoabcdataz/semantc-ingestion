@@ -63,7 +63,7 @@ def fetch_data_from_endpoint(endpoint: str, client_id: str, offset: int = 0, bat
 
         # extract the actual data items from the response
         actual_data = next((value for key, value in data.items() if isinstance(value, list)), [])
-
+        print(actual_data)
         return actual_data
     except RequestException as e:
         logger.error(f"failed to fetch data from {endpoint} for client {client_id} - offset {offset}: {str(e)}")

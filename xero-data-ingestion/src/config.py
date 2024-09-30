@@ -1,6 +1,6 @@
 import os
 from typing import Dict, Any
-from google.cloud import resourcemanager
+from google.cloud import resourcemanager_v3
 
 def get_env_variable(var_name: str) -> str:
     value = os.environ.get(var_name)
@@ -19,11 +19,14 @@ def get_project_number(project_id: str) -> str:
         str: the project number
     """
     try:
-        client = resourcemanager.ProjectsClient()
-        project = client.fetch_project(name=f"projects/{project_id}")
-        return project.project_number
+        client = resourcemanager_v3.ProjectsClient()
+        request = resourcemanager_v3.GetProjectRequest(
+            name=f"projects/{project_id}"
+        )
+        response = client.get_project(request=request)
+        return str(response.name)
     except Exception as e:
-        raise RuntimeError(f"failed to get project number for {project_id}: {e}")
+        raise RuntimeError(f"Failed to get project number for {project_id}: {e}")
 
 def get_client_config() -> Dict[str, Any]:
     client_id = get_env_variable("CLIENT_ID")
@@ -35,7 +38,7 @@ def get_client_config() -> Dict[str, Any]:
         "PROJECT_ID": project_id,
         "PROJECT_NUMBER": project_number,
         "BUCKET_NAME": f"client-{client_id}-bucket-xero",
-        "SECRETS_PATH": f"projects/{project_number}/secrets/client-{client_id}-token-xero",
+        "SECRETS_PATH": f"{project_number}/secrets/client-{client_id}-token-xero",
         "BATCH_SIZE": int(os.environ.get("BATCH_SIZE", 100))
     }
 

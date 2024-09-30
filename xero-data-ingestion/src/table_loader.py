@@ -22,9 +22,10 @@ def load_json_to_table() -> None:
     project_id = CONFIG['PROJECT_ID']
     client_id = CONFIG['CLIENT_ID']
     bucket_name = CONFIG['BUCKET_NAME']
+    formatted_client_id = client_id.replace("-", "_")
 
     
-    dataset_id = f"{project_id}.{client_id}_raw"
+    dataset_id = f"{project_id}.client_{client_id}_raw"
 
     # ensure dataset exists
     try:

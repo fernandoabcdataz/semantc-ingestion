@@ -1,6 +1,5 @@
 Flask
 google-cloud-secret-manager
-google-cloud-resourcemanager
 google-cloud-storage
 google-cloud-bigquery
 requests
@@ -10,3 +9,4 @@ ratelimit
 cachetools
 structlog
 gunicorn
+google-cloud-resource-manager

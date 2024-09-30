@@ -26,7 +26,7 @@ async def process_endpoint(name_endpoint: Tuple[str, str]) -> None:
 
     try:
         while True:
-            # Fetch data in a separate thread to avoid blocking
+            # fetch data in a separate thread to avoid blocking
             data = await asyncio.to_thread(fetch_data_from_endpoint, endpoint, client_id, offset, batch_size)
             if not data:
                 break
