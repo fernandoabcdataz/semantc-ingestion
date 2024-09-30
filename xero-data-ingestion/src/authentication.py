@@ -58,8 +58,8 @@ def retrieve_tokens(client_id: str) -> Dict[str, Any]:
         Dict[str, Any]: The token dictionary
     """
     try:
-        secret_name = f"secrets/client-{client_id}-token-xero"
-        tokens_json = get_secret(secret_name)
+        secret_id = CONFIG['SECRETS_PATH']
+        tokens_json = get_secret(secret_id)
         return json.loads(tokens_json)
     except Exception as e:
         logger.error(f"error retrieving tokens for client {client_id}: {str(e)}")
