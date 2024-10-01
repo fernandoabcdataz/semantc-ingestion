@@ -10,7 +10,7 @@ from utils import get_logger
 
 logger = get_logger()
 
-# configure retry strategy
+# Configure retry strategy
 retry_strategy = Retry(
     total=5,
     backoff_factor=1,
@@ -23,7 +23,7 @@ session = requests.Session()
 session.mount("https://", adapter)
 session.mount("http://", adapter)
 
-# rate limit configuration
+# Rate limit configuration
 RATE_LIMIT_CALLS = 60
 RATE_LIMIT_PERIOD = 50  # seconds
 
@@ -31,16 +31,7 @@ RATE_LIMIT_PERIOD = 50  # seconds
 @limits(calls=RATE_LIMIT_CALLS, period=RATE_LIMIT_PERIOD)
 def fetch_data_from_endpoint(endpoint: str, client_id: str, offset: int = 0, batch_size: int = 100) -> List[Dict[str, Any]]:
     """
-    fetches data from a specified Xero API endpoint with pagination
-
-    Args:
-        endpoint (str): the API endpoint URL
-        client_id (str): the unique identifier for the client
-        offset (int, optional): the pagination offset (defaults to 0)
-        batch_size (int, optional): number of records to fetch per request (defaults to 100)
-
-    Returns:
-        List[Dict[str, Any]]: a list of data items
+    Fetches data from a specified Xero API endpoint with pagination.
     """
     token = get_token(client_id)
     headers = {
@@ -52,19 +43,28 @@ def fetch_data_from_endpoint(endpoint: str, client_id: str, offset: int = 0, bat
         'pageSize': batch_size
     }
 
+    logger.debug(f"Requesting {endpoint} with headers {headers} and params {params}")
+
     try:
-        logger.info(f"fetching data from {endpoint} for client {client_id} - offset {offset}")
+        logger.info(f"Fetching data from {endpoint} for client {client_id} - offset {offset}")
         response = session.get(endpoint, headers=headers, params=params, timeout=30)
         if response.status_code == 429:
-            logger.warning(f"rate limit exceeded when accessing {endpoint} for client {client_id}. retrying...")
-            raise RequestException("rate limit exceeded")
+            logger.warning(f"Rate limit exceeded when accessing {endpoint} for client {client_id}. Retrying...")
+            raise RequestException("Rate limit exceeded")
         response.raise_for_status()
         data = response.json()
 
-        # extract the actual data items from the response
-        actual_data = next((value for key, value in data.items() if isinstance(value, list)), [])
-        print(actual_data)
+        # Extract the actual data items from the response
+        # Assuming the data is under a key that matches the endpoint name
+        endpoint_key = endpoint.split('/')[-1]
+        actual_data = data.get(endpoint_key, [])
+
+        logger.debug(f"Extracted data from {endpoint}: {actual_data}")
+
         return actual_data
     except RequestException as e:
-        logger.error(f"failed to fetch data from {endpoint} for client {client_id} - offset {offset}: {str(e)}")
+        logger.error(f"Failed to fetch data from {endpoint} for client {client_id} - offset {offset}: {str(e)}")
+        raise
+    except Exception as e:
+        logger.error(f"An error occurred while fetching data from {endpoint} for client {client_id}: {str(e)}")
         raise

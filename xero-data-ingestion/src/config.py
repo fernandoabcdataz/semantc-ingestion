@@ -39,7 +39,6 @@ def get_client_config() -> Dict[str, Any]:
         "PROJECT_NUMBER": project_number,
         "BUCKET_NAME": f"client-{client_id}-bucket-xero",
         "SECRETS_PATH": f"{project_number}/secrets/client-{client_id}-token-xero",
-        "BATCH_SIZE": int(os.environ.get("BATCH_SIZE", 100))
     }
 
 ENDPOINT_BASE = 'https://api.xero.com/api.xro/2.0/'
