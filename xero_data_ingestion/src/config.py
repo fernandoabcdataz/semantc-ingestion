@@ -26,7 +26,7 @@ def get_project_number(project_id: str) -> str:
         response = client.get_project(request=request)
         return str(response.name)
     except Exception as e:
-        raise RuntimeError(f"Failed to get project number for {project_id}: {e}")
+        raise RuntimeError(f"failed to get project number for {project_id}: {e}")
 
 def get_client_config() -> Dict[str, Any]:
     client_id = get_env_variable("CLIENT_ID")

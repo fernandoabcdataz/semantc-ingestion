@@ -88,7 +88,7 @@ def refresh_access_token(client_id: str, refresh_token: str) -> Dict[str, Any]:
         logger.error(f"Error refreshing token for client {client_id}: {str(e)}")
         raise
 
-def get_access_token(client_id: str) -> Dict[str, Any]:
+def get_token(client_id: str) -> Dict[str, Any]:
     """
     retrieves and refreshes the OAuth access token for a client if necessary
     """
