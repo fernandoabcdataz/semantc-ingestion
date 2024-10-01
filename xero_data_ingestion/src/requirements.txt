@@ -1,0 +1,12 @@
+Flask
+google-cloud-secret-manager
+google-cloud-storage
+google-cloud-bigquery
+requests
+requests-oauthlib
+oauthlib
+ratelimit
+cachetools
+structlog
+gunicorn
+google-cloud-resource-manager
