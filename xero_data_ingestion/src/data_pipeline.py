@@ -18,31 +18,25 @@ async def process_endpoint(name_endpoint: Tuple[str, str]) -> None:
         name_endpoint (Tuple[str, str]): a tuple containing the endpoint name and URL
     """
     name, endpoint = name_endpoint
-    all_data = []
-    offset = 0
-    batch_size = 100
     client_id = CONFIG['CLIENT_ID']
     bucket_name = CONFIG['BUCKET_NAME']
 
     try:
-        while True:
-            data = await asyncio.to_thread(fetch_data_from_endpoint, endpoint, client_id, offset, batch_size)
-            if not data:
-                break
-            all_data.extend(data)
-            if len(data) < batch_size:
-                break  # Last batch
-            offset += batch_size  # increment offset by batch_size
+        all_data = await asyncio.to_thread(fetch_data_from_endpoint, endpoint, client_id)
 
         if all_data:
             ingestion_time = datetime.utcnow().isoformat()
-            json_lines = "\n".join(json.dumps({**item, "ingestion_time": ingestion_time}) for item in all_data)
+            # add ingestion_time to each record
+            json_lines = "\n".join(
+                json.dumps({**item, "ingestion_time": ingestion_time}) for item in all_data
+            )
+            # write the data to Google Cloud Storage
             await asyncio.to_thread(write_json_to_gcs, bucket_name, f"{name}.json", json_lines)
-            logger.info(f"processed endpoint {name} for client {client_id}, total records: {len(all_data)}")
+            logger.info(f"processed endpoint '{name}' for client '{client_id}', total records: {len(all_data)}")
         else:
-            logger.warning(f"no data found for endpoint {name} for client {client_id}")
+            logger.warning(f"no data found for endpoint '{name}' for client '{client_id}'")
     except Exception as e:
-        logger.error(f"error processing endpoint {name} for client {client_id}: {str(e)}")
+        logger.error(f"error processing endpoint '{name}' for client '{client_id}': {str(e)}")
 
 async def run_pipeline() -> None:
     """

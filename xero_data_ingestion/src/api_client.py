@@ -29,42 +29,62 @@ RATE_LIMIT_PERIOD = 50  # seconds
 
 @sleep_and_retry
 @limits(calls=RATE_LIMIT_CALLS, period=RATE_LIMIT_PERIOD)
-def fetch_data_from_endpoint(endpoint: str, client_id: str, offset: int = 0, batch_size: int = 100) -> List[Dict[str, Any]]:
+def fetch_data_from_endpoint(endpoint: str, client_id: str, page_size: int = 100) -> List[Dict[str, Any]]:
     """
-    fetches data from a specified Xero API endpoint with pagination.
+    fetches all data from a specified Xero API endpoint using pagination
     """
-    token = get_token(client_id)
-    headers = {
-        'Authorization': f'Bearer {token["access_token"]}',
-        'Accept': 'application/json'
-    }
-    params = {
-        'offset': offset,
-        'pageSize': batch_size
-    }
+    all_data = []
+    page = 1
 
-    logger.debug(f"Requesting {endpoint} with headers {headers} and params {params}")
+    while True:
+        token = get_token(client_id)
+        headers = {
+            'Authorization': f'Bearer {token["access_token"]}',
+            'Accept': 'application/json',
+            'xero-tenant-id': client_id
+        }
+        params = {
+            'page': page,
+            'pageSize': page_size
+        }
 
-    try:
-        logger.info(f"Fetching data from {endpoint} for client {client_id} - offset {offset}")
-        response = session.get(endpoint, headers=headers, params=params, timeout=30)
-        if response.status_code == 429:
-            logger.warning(f"Rate limit exceeded when accessing {endpoint} for client {client_id}. Retrying...")
-            raise RequestException("Rate limit exceeded")
-        response.raise_for_status()
-        data = response.json()
+        try:
+            logger.info(f"fetching page {page} from {endpoint} for client {client_id}")
+            response = session.get(endpoint, headers=headers, params=params, timeout=30)
+            # response = session.get(endpoint, headers=headers)
+            # print(headers)
+            if response.status_code == 429:
+                logger.warning(f"rate limit exceeded when accessing {endpoint} for client {client_id}. retrying...")
+                raise RequestException("rate limit exceeded")
 
-        # Extract the actual data items from the response
-        # Assuming the data is under a key that matches the endpoint name
-        endpoint_key = endpoint.split('/')[-1]
-        actual_data = data.get(endpoint_key, [])
+            response.raise_for_status()
+            data = response.json()
 
-        logger.debug(f"Extracted data from {endpoint}: {actual_data}")
+            # extract pagination info and data items
+            pagination = data.get('pagination', {})
+            items_key = endpoint.rstrip('/').split('/')[-1]  # e.g., 'BankTransactions'
+            actual_data = data.get(items_key, [])
 
-        return actual_data
-    except RequestException as e:
-        logger.error(f"Failed to fetch data from {endpoint} for client {client_id} - offset {offset}: {str(e)}")
-        raise
-    except Exception as e:
-        logger.error(f"An error occurred while fetching data from {endpoint} for client {client_id}: {str(e)}")
-        raise
+            logger.debug(f"page {page} fetched with {len(actual_data)} items.")
+
+            if not actual_data:
+                logger.info(f"no more data found on page {page}. Ending pagination.")
+                break
+
+            all_data.extend(actual_data)
+
+            # check if we've reached the last page
+            if page >= pagination.get('pageCount', page):
+                logger.info(f"all pages fetched for {endpoint} for client {client_id}.")
+                break
+
+            page += 1
+
+        except RequestException as e:
+            logger.error(f"failed to fetch data from {endpoint} for client {client_id} on page {page}: {str(e)}")
+            raise
+        except Exception as e:
+            logger.error(f"an unexpected error occurred while fetching data from {endpoint} for client {client_id}: {str(e)}")
+            raise
+
+    return all_data
