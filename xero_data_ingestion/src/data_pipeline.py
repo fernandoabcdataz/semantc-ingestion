@@ -25,9 +25,7 @@ async def process_endpoint(name_endpoint: Tuple[str, str]) -> None:
     bucket_name = CONFIG['BUCKET_NAME']
 
     try:
-        print("BEFORE TRY!")
         while True:
-            print("AFTER TRY!")
             data = await asyncio.to_thread(fetch_data_from_endpoint, endpoint, client_id, offset, batch_size)
             if not data:
                 break

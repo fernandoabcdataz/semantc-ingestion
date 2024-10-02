@@ -31,7 +31,7 @@ RATE_LIMIT_PERIOD = 50  # seconds
 @limits(calls=RATE_LIMIT_CALLS, period=RATE_LIMIT_PERIOD)
 def fetch_data_from_endpoint(endpoint: str, client_id: str, offset: int = 0, batch_size: int = 100) -> List[Dict[str, Any]]:
     """
-    Fetches data from a specified Xero API endpoint with pagination.
+    fetches data from a specified Xero API endpoint with pagination.
     """
     token = get_token(client_id)
     headers = {
