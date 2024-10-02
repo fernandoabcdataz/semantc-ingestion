@@ -11,7 +11,7 @@ from utils import get_logger
 
 logger = get_logger()
 
-# Cache to store tokens with a TTL matching token expiry
+# cache to store tokens with a TTL matching token expiry
 _token_cache = TTLCache(maxsize=1000, ttl=3600)
 _token_lock = Lock()
 
@@ -21,7 +21,7 @@ def get_secret(secret_id: str) -> str:
     """
     try:
         client = secretmanager.SecretManagerServiceClient()
-        name = f"projects/{CONFIG['PROJECT_NUMBER']}/secrets/{secret_id}/versions/latest"
+        name = f"{CONFIG['PROJECT_NUMBER']}/secrets/{secret_id}/versions/1"
         response = client.access_secret_version(name=name)
         return response.payload.data.decode('UTF-8')
     except Exception as e:
@@ -56,7 +56,7 @@ def store_tokens(client_id: str, tokens: Dict[str, Any]) -> None:
     try:
         client = secretmanager.SecretManagerServiceClient()
         secret_id = f"client-{client_id}-token-xero"
-        parent = f"projects/{CONFIG['PROJECT_NUMBER']}/secrets/{secret_id}"
+        parent = f"{CONFIG['PROJECT_NUMBER']}/secrets/{secret_id}"
 
         # Add the new secret version
         payload = json.dumps(tokens).encode("UTF-8")
