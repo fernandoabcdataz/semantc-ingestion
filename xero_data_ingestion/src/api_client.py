@@ -40,8 +40,8 @@ def fetch_data_from_endpoint(endpoint: str, client_id: str, page_size: int = 100
         token = get_token(client_id)
         headers = {
             'Authorization': f'Bearer {token["access_token"]}',
-            'Accept': 'application/json',
-            'xero-tenant-id': client_id
+            'xero-tenant-id': client_id,
+            'Accept': 'application/json'
         }
         params = {
             'page': page,
@@ -50,8 +50,8 @@ def fetch_data_from_endpoint(endpoint: str, client_id: str, page_size: int = 100
 
         try:
             logger.info(f"fetching page {page} from {endpoint} for client {client_id}")
-            response = session.get(endpoint, headers=headers, params=params, timeout=30)
-            # response = session.get(endpoint, headers=headers)
+            # response = session.get(endpoint, headers=headers, params=params, timeout=30)
+            response = session.get(endpoint, headers=headers)
             # print(headers)
             if response.status_code == 429:
                 logger.warning(f"rate limit exceeded when accessing {endpoint} for client {client_id}. retrying...")

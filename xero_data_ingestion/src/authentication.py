@@ -113,12 +113,12 @@ def refresh_access_token(client_id: str, refresh_token: str) -> Dict[str, Any]:
             'https://identity.xero.com/connect/token',
             client_secret=APP_SECRET
         )
-        new_tokens['expires_at'] = time.time() + new_tokens.get('expires_in', 3600)
+        new_tokens['expires_at'] = time.time() + new_tokens.get('expires_in', 1800)
         store_tokens(client_id, new_tokens)
-        logger.info(f"Refreshed token for client {client_id}")
+        logger.info(f"refreshed token for client {client_id}")
         return new_tokens
     except Exception as e:
-        logger.error(f"Error refreshing token for client {client_id}: {str(e)}")
+        logger.error(f"error refreshing token for client {client_id}: {str(e)}")
         raise
 
 def get_token(client_id: str) -> Dict[str, Any]:
@@ -132,12 +132,13 @@ def get_token(client_id: str) -> Dict[str, Any]:
 
         tokens = retrieve_tokens(client_id)
         
-        # Set 'expires_at' if not present
+        # set 'expires_at' if not present
         if 'expires_at' not in tokens:
-            tokens['expires_at'] = time.time() + tokens.get('expires_in', 3600)
-            store_tokens(client_id, tokens)  # Persist the updated tokens
+            tokens['expires_at'] = time.time() + tokens.get('expires_in', 1800)
+            store_tokens(client_id, tokens)  # persist the updated tokens
 
-        # Refresh if expired
+        # refresh if expired
+        print(tokens.get('expires_at', 0), time.time())
         if tokens.get('expires_at', 0) < time.time():
             tokens = refresh_access_token(client_id, tokens.get('refresh_token'))
         
